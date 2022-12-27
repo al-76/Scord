@@ -1,0 +1,517 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CD0F9CF1295B455A00A0FF94 /* ScordApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9CF0295B455A00A0FF94 /* ScordApp.swift */; };
+		CD0F9CF3295B455A00A0FF94 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9CF2295B455A00A0FF94 /* ContentView.swift */; };
+		CD0F9CF5295B455C00A0FF94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD0F9CF4295B455C00A0FF94 /* Assets.xcassets */; };
+		CD0F9CF8295B455C00A0FF94 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD0F9CF7295B455C00A0FF94 /* Preview Assets.xcassets */; };
+		CD0F9D1C295B459F00A0FF94 /* Reducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D1B295B459F00A0FF94 /* Reducer.swift */; };
+		CD0F9D1E295B45B600A0FF94 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D1D295B45B600A0FF94 /* Store.swift */; };
+		CD0F9D20295B45DC00A0FF94 /* StateError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D1F295B45DC00A0FF94 /* StateError.swift */; };
+		CD0F9D24295B81DF00A0FF94 /* Answer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D23295B81DF00A0FF94 /* Answer.swift */; };
+		CD0F9D26295B81F500A0FF94 /* TestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D25295B81F500A0FF94 /* TestError.swift */; };
+		CD0F9D28295B824F00A0FF94 /* XCTestCase+Await.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D27295B824F00A0FF94 /* XCTestCase+Await.swift */; };
+		CD0F9D2B295B82AF00A0FF94 /* ReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D2A295B82AF00A0FF94 /* ReducerTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CD0F9CFE295B455C00A0FF94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CD0F9CE5295B455A00A0FF94 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CD0F9CEC295B455A00A0FF94;
+			remoteInfo = Scord;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		CD0F9CED295B455A00A0FF94 /* Scord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scord.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD0F9CF0295B455A00A0FF94 /* ScordApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScordApp.swift; sourceTree = "<group>"; };
+		CD0F9CF2295B455A00A0FF94 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CD0F9CF4295B455C00A0FF94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CD0F9CF7295B455C00A0FF94 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CD0F9CFD295B455C00A0FF94 /* ScordTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScordTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD0F9D1B295B459F00A0FF94 /* Reducer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reducer.swift; sourceTree = "<group>"; };
+		CD0F9D1D295B45B600A0FF94 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		CD0F9D1F295B45DC00A0FF94 /* StateError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateError.swift; sourceTree = "<group>"; };
+		CD0F9D23295B81DF00A0FF94 /* Answer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Answer.swift; sourceTree = "<group>"; };
+		CD0F9D25295B81F500A0FF94 /* TestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestError.swift; sourceTree = "<group>"; };
+		CD0F9D27295B824F00A0FF94 /* XCTestCase+Await.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Await.swift"; sourceTree = "<group>"; };
+		CD0F9D2A295B82AF00A0FF94 /* ReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CD0F9CEA295B455A00A0FF94 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD0F9CFA295B455C00A0FF94 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		CD0F9CE4295B455A00A0FF94 = {
+			isa = PBXGroup;
+			children = (
+				CD0F9CEF295B455A00A0FF94 /* Scord */,
+				CD0F9D00295B455C00A0FF94 /* ScordTests */,
+				CD0F9CEE295B455A00A0FF94 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CD0F9CEE295B455A00A0FF94 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9CED295B455A00A0FF94 /* Scord.app */,
+				CD0F9CFD295B455C00A0FF94 /* ScordTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CD0F9CEF295B455A00A0FF94 /* Scord */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9D1A295B457500A0FF94 /* Redux */,
+				CD0F9CF0295B455A00A0FF94 /* ScordApp.swift */,
+				CD0F9CF2295B455A00A0FF94 /* ContentView.swift */,
+				CD0F9CF4295B455C00A0FF94 /* Assets.xcassets */,
+				CD0F9CF6295B455C00A0FF94 /* Preview Content */,
+			);
+			path = Scord;
+			sourceTree = "<group>";
+		};
+		CD0F9CF6295B455C00A0FF94 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9CF7295B455C00A0FF94 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CD0F9D00295B455C00A0FF94 /* ScordTests */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9D21295B819300A0FF94 /* Common */,
+				CD0F9D29295B829800A0FF94 /* Redux */,
+			);
+			path = ScordTests;
+			sourceTree = "<group>";
+		};
+		CD0F9D1A295B457500A0FF94 /* Redux */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9D1B295B459F00A0FF94 /* Reducer.swift */,
+				CD0F9D1D295B45B600A0FF94 /* Store.swift */,
+				CD0F9D1F295B45DC00A0FF94 /* StateError.swift */,
+			);
+			path = Redux;
+			sourceTree = "<group>";
+		};
+		CD0F9D21295B819300A0FF94 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9D23295B81DF00A0FF94 /* Answer.swift */,
+				CD0F9D25295B81F500A0FF94 /* TestError.swift */,
+				CD0F9D27295B824F00A0FF94 /* XCTestCase+Await.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		CD0F9D29295B829800A0FF94 /* Redux */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9D2A295B82AF00A0FF94 /* ReducerTests.swift */,
+			);
+			path = Redux;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CD0F9CEC295B455A00A0FF94 /* Scord */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD0F9D11295B455C00A0FF94 /* Build configuration list for PBXNativeTarget "Scord" */;
+			buildPhases = (
+				CD0F9CE9295B455A00A0FF94 /* Sources */,
+				CD0F9CEA295B455A00A0FF94 /* Frameworks */,
+				CD0F9CEB295B455A00A0FF94 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Scord;
+			productName = Scord;
+			productReference = CD0F9CED295B455A00A0FF94 /* Scord.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CD0F9CFC295B455C00A0FF94 /* ScordTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD0F9D14295B455C00A0FF94 /* Build configuration list for PBXNativeTarget "ScordTests" */;
+			buildPhases = (
+				CD0F9CF9295B455C00A0FF94 /* Sources */,
+				CD0F9CFA295B455C00A0FF94 /* Frameworks */,
+				CD0F9CFB295B455C00A0FF94 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD0F9CFF295B455C00A0FF94 /* PBXTargetDependency */,
+			);
+			name = ScordTests;
+			productName = ScordTests;
+			productReference = CD0F9CFD295B455C00A0FF94 /* ScordTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CD0F9CE5295B455A00A0FF94 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1410;
+				LastUpgradeCheck = 1410;
+				TargetAttributes = {
+					CD0F9CEC295B455A00A0FF94 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+					CD0F9CFC295B455C00A0FF94 = {
+						CreatedOnToolsVersion = 14.1;
+						TestTargetID = CD0F9CEC295B455A00A0FF94;
+					};
+				};
+			};
+			buildConfigurationList = CD0F9CE8295B455A00A0FF94 /* Build configuration list for PBXProject "Scord" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CD0F9CE4295B455A00A0FF94;
+			productRefGroup = CD0F9CEE295B455A00A0FF94 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CD0F9CEC295B455A00A0FF94 /* Scord */,
+				CD0F9CFC295B455C00A0FF94 /* ScordTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CD0F9CEB295B455A00A0FF94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD0F9CF8295B455C00A0FF94 /* Preview Assets.xcassets in Resources */,
+				CD0F9CF5295B455C00A0FF94 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD0F9CFB295B455C00A0FF94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CD0F9CE9295B455A00A0FF94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD0F9CF3295B455A00A0FF94 /* ContentView.swift in Sources */,
+				CD0F9D20295B45DC00A0FF94 /* StateError.swift in Sources */,
+				CD0F9CF1295B455A00A0FF94 /* ScordApp.swift in Sources */,
+				CD0F9D1C295B459F00A0FF94 /* Reducer.swift in Sources */,
+				CD0F9D1E295B45B600A0FF94 /* Store.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD0F9CF9295B455C00A0FF94 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD0F9D26295B81F500A0FF94 /* TestError.swift in Sources */,
+				CD0F9D2B295B82AF00A0FF94 /* ReducerTests.swift in Sources */,
+				CD0F9D28295B824F00A0FF94 /* XCTestCase+Await.swift in Sources */,
+				CD0F9D24295B81DF00A0FF94 /* Answer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CD0F9CFF295B455C00A0FF94 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CD0F9CEC295B455A00A0FF94 /* Scord */;
+			targetProxy = CD0F9CFE295B455C00A0FF94 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		CD0F9D0F295B455C00A0FF94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CD0F9D10295B455C00A0FF94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CD0F9D12295B455C00A0FF94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Scord/Preview Content\"";
+				DEVELOPMENT_TEAM = 6894A8BA33;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = company.Scord;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CD0F9D13295B455C00A0FF94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Scord/Preview Content\"";
+				DEVELOPMENT_TEAM = 6894A8BA33;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = company.Scord;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CD0F9D15295B455C00A0FF94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6894A8BA33;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = company.ScordTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Scord.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Scord";
+			};
+			name = Debug;
+		};
+		CD0F9D16295B455C00A0FF94 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6894A8BA33;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = company.ScordTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Scord.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Scord";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CD0F9CE8295B455A00A0FF94 /* Build configuration list for PBXProject "Scord" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD0F9D0F295B455C00A0FF94 /* Debug */,
+				CD0F9D10295B455C00A0FF94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD0F9D11295B455C00A0FF94 /* Build configuration list for PBXNativeTarget "Scord" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD0F9D12295B455C00A0FF94 /* Debug */,
+				CD0F9D13295B455C00A0FF94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD0F9D14295B455C00A0FF94 /* Build configuration list for PBXNativeTarget "ScordTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD0F9D15295B455C00A0FF94 /* Debug */,
+				CD0F9D16295B455C00A0FF94 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CD0F9CE5295B455A00A0FF94 /* Project object */;
+}
