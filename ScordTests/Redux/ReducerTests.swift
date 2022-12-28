@@ -79,8 +79,7 @@ final class ReducerTests: XCTestCase {
         let store = StoreOf<MainReducer>(state: .init(increment: .init(counter: counter)),
                                          reducer: MainReducer(incrementReducer: IncrementReducer()))
         let scopedStore = store.scope(onState: \.increment,
-                                      onAction: MainReducer.Action.increment,
-                                      IncrementReducer.self)
+                                      onAction: MainReducer.Action.increment)
 
         // Act
         scopedStore.submit(.increment)
@@ -98,8 +97,7 @@ final class ReducerTests: XCTestCase {
         let store = StoreOf<MainReducer>(state: .init(increment: .init(counter: counter)),
                                          reducer: MainReducer(incrementReducer: IncrementReducer()))
         let scopedStore = store.scope(onState: \.increment,
-                                      onAction: MainReducer.Action.increment,
-                                      IncrementReducer.self)
+                                      onAction: MainReducer.Action.increment)
 
         // Act
         store.submit(.increment(.increment))

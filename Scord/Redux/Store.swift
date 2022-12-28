@@ -39,11 +39,10 @@ final class Store<Action, State>: ObservableObject {
             .store(in: &cancellable)
     }
 
-    func scope<ScopedReducer: Reducer>(onState: @escaping (State) -> ScopedReducer.State,
-                                       onAction: @escaping (ScopedReducer.Action) -> Action,
-                                       _ type: ScopedReducer.Type) -> Store<ScopedReducer.Action, ScopedReducer.State> {
-        let store = Store<ScopedReducer.Action,
-                          ScopedReducer.State>(state: onState(state)) { [weak self] state, action in
+    func scope<ScopedState, ScopedAction>(onState: @escaping (State) -> ScopedState,
+                                          onAction: @escaping (ScopedAction) -> Action) -> Store<ScopedAction, ScopedState> {
+        let store = Store<ScopedAction,
+                          ScopedState>(state: onState(state)) { [weak self] state, action in
                               self?.submit(onAction(action))
                               return noEffect()
                           }
