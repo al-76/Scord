@@ -68,7 +68,7 @@ struct IncrementReducer: Reducer {
 }
 
 final class ReducerTests: XCTestCase {
-    func testSend() {
+    func testSubmit() {
         // Arrange
         let value = 1099
         let store = StoreOf<IncrementReducer>(state: .init(value: value),
@@ -82,7 +82,7 @@ final class ReducerTests: XCTestCase {
                        .init(value: value + 1))
     }
 
-    func testSendWithScope() {
+    func testSubmitWithScope() {
         // Arrange
         let value = 1099
         let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
@@ -100,7 +100,7 @@ final class ReducerTests: XCTestCase {
                        .init(value: value + 1))
     }
 
-    func testSendWithScopeMediated() {
+    func testSubmitWithScopeMediated() {
         // Arrange
         let value = 1099
         let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
