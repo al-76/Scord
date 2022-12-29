@@ -1,5 +1,5 @@
 # Scord
- SCoRd - SwiftUI/Combine/Redux
+ SCoRd - Swift/Combine/Redux
 
-A simple Redux implementation for SwiftUI with Combine.
+A simple Redux implementation with Combine.
 That's just a prototype to test some conceptions and approaches in Redux.
