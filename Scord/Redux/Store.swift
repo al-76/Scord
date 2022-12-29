@@ -39,16 +39,16 @@ final class Store<Action, State>: ObservableObject {
             .store(in: &cancellable)
     }
 
-    func scope<ScopedState, ScopedAction>(onState: @escaping (State) -> ScopedState,
-                                          onAction: @escaping (ScopedAction) -> Action) -> Store<ScopedAction, ScopedState> {
-        let store = Store<ScopedAction,
-                          ScopedState>(state: onState(state)) { [weak self] state, action in
-                              self?.submit(onAction(action))
+    func scope<ScopeState, ScopeAction>(mapState: @escaping (State) -> ScopeState,
+                                        mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeAction, ScopeState> {
+        let store = Store<ScopeAction,
+                          ScopeState>(state: mapState(state)) { [weak self] state, action in
+                              self?.submit(mapAction(action))
                               return noEffect()
                           }
 
         $state
-            .map(onState)
+            .map(mapState)
             .receive(on: DispatchQueue.main)
             .assign(to: &store.$state)
 

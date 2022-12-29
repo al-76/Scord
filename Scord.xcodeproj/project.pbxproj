@@ -18,6 +18,9 @@
 		CD0F9D26295B81F500A0FF94 /* TestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D25295B81F500A0FF94 /* TestError.swift */; };
 		CD0F9D28295B824F00A0FF94 /* XCTestCase+Await.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D27295B824F00A0FF94 /* XCTestCase+Await.swift */; };
 		CD0F9D2B295B82AF00A0FF94 /* ReducerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD0F9D2A295B82AF00A0FF94 /* ReducerTests.swift */; };
+		CDC14084295E39D9003D56A4 /* ReducerBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC14083295E39D9003D56A4 /* ReducerBuilder.swift */; };
+		CDC14086295E3A02003D56A4 /* Scope.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC14085295E3A02003D56A4 /* Scope.swift */; };
+		CDC14088295E42E4003D56A4 /* ReducerCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC14087295E42E4003D56A4 /* ReducerCollection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +47,9 @@
 		CD0F9D25295B81F500A0FF94 /* TestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestError.swift; sourceTree = "<group>"; };
 		CD0F9D27295B824F00A0FF94 /* XCTestCase+Await.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Await.swift"; sourceTree = "<group>"; };
 		CD0F9D2A295B82AF00A0FF94 /* ReducerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerTests.swift; sourceTree = "<group>"; };
+		CDC14083295E39D9003D56A4 /* ReducerBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerBuilder.swift; sourceTree = "<group>"; };
+		CDC14085295E3A02003D56A4 /* Scope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scope.swift; sourceTree = "<group>"; };
+		CDC14087295E42E4003D56A4 /* ReducerCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReducerCollection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,9 +120,10 @@
 		CD0F9D1A295B457500A0FF94 /* Redux */ = {
 			isa = PBXGroup;
 			children = (
-				CD0F9D1B295B459F00A0FF94 /* Reducer.swift */,
+				CDC14089295E42EF003D56A4 /* Reducer */,
 				CD0F9D1D295B45B600A0FF94 /* Store.swift */,
 				CD0F9D1F295B45DC00A0FF94 /* StateError.swift */,
+				CDC14085295E3A02003D56A4 /* Scope.swift */,
 			);
 			path = Redux;
 			sourceTree = "<group>";
@@ -137,6 +144,16 @@
 				CD0F9D2A295B82AF00A0FF94 /* ReducerTests.swift */,
 			);
 			path = Redux;
+			sourceTree = "<group>";
+		};
+		CDC14089295E42EF003D56A4 /* Reducer */ = {
+			isa = PBXGroup;
+			children = (
+				CD0F9D1B295B459F00A0FF94 /* Reducer.swift */,
+				CDC14083295E39D9003D56A4 /* ReducerBuilder.swift */,
+				CDC14087295E42E4003D56A4 /* ReducerCollection.swift */,
+			);
+			path = Reducer;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -239,10 +256,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDC14088295E42E4003D56A4 /* ReducerCollection.swift in Sources */,
 				CD0F9CF3295B455A00A0FF94 /* ContentView.swift in Sources */,
+				CDC14086295E3A02003D56A4 /* Scope.swift in Sources */,
 				CD0F9D20295B45DC00A0FF94 /* StateError.swift in Sources */,
 				CD0F9CF1295B455A00A0FF94 /* ScordApp.swift in Sources */,
 				CD0F9D1C295B459F00A0FF94 /* Reducer.swift in Sources */,
+				CDC14084295E39D9003D56A4 /* ReducerBuilder.swift in Sources */,
 				CD0F9D1E295B45B600A0FF94 /* Store.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

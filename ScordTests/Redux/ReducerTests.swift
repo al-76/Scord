@@ -12,29 +12,38 @@ import XCTest
 
 struct MainReducer: Reducer {
     struct State: Equatable {
-        var increment: IncrementReducer.State
+        var increment: IncrementReducer.State = .init()
     }
 
     enum Action {
         case increment(IncrementReducer.Action)
+
+        // TODO: to get rid of a boilerplate
+        func getIncrementAction() -> IncrementReducer.Action? {
+            switch self {
+            case .increment(let action):
+                return action
+            }
+        }
     }
 
-    let incrementReducer: IncrementReducer
+    var children: some Reducer<State, Action> {
+        Scope(statePath: \.increment,
+              mapAction: { $0.getIncrementAction() },
+              mapScopedAction: MainReducer.Action.increment,
+              reducer: IncrementReducer())
 
-    func reduce(state: inout State, action: Action) -> Scord.Effect<Action> {
-        switch action {
-        case .increment(let action):
-            return incrementReducer
-                .reduce(state: &state.increment, action: action)
-                .map(Action.increment)
-                .eraseToAnyPublisher()
+        EmptyReducer()
+
+        for _ in 0...2 {
+            EmptyReducer()
         }
     }
 }
 
 struct IncrementReducer: Reducer {
     struct State: Equatable {
-        var counter: Int
+        var value: Int = 0
     }
 
     enum Action {
@@ -45,13 +54,13 @@ struct IncrementReducer: Reducer {
     func reduce(state: inout State, action: Action) -> Effect<Action> {
         switch action {
         case .increment:
-            return Future { [counter = state.counter] promise in
-                promise(.success(.incrementResult(counter + 1)))
+            return Future { [value = state.value] promise in
+                promise(.success(.incrementResult(value + 1)))
             }
             .eraseToAnyPublisher()
 
-        case .incrementResult(let counter):
-            state.counter = counter
+        case .incrementResult(let value):
+            state.value = value
         }
 
         return noEffect()
@@ -61,8 +70,8 @@ struct IncrementReducer: Reducer {
 final class ReducerTests: XCTestCase {
     func testSend() {
         // Arrange
-        let counter = 1099
-        let store = StoreOf<IncrementReducer>(state: .init(counter: counter),
+        let value = 1099
+        let store = StoreOf<IncrementReducer>(state: .init(value: value),
                                               reducer: IncrementReducer())
 
         // Act
@@ -70,42 +79,42 @@ final class ReducerTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(try awaitPublisher(store.$state.dropFirst()),
-                       .init(counter: counter + 1))
+                       .init(value: value + 1))
     }
 
     func testScope() {
         // Arrange
-        let counter = 1099
-        let store = StoreOf<MainReducer>(state: .init(increment: .init(counter: counter)),
-                                         reducer: MainReducer(incrementReducer: IncrementReducer()))
-        let scopedStore = store.scope(onState: \.increment,
-                                      onAction: MainReducer.Action.increment)
+        let value = 1099
+        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
+                                         reducer: MainReducer())
+        let scopedStore = store.scope(mapState: \.increment,
+                                      mapAction: MainReducer.Action.increment)
 
         // Act
         scopedStore.submit(.increment)
 
         // Assert
         XCTAssertEqual(try awaitPublisher(store.$state.dropFirst()),
-                       .init(increment: .init(counter: counter + 1)))
+                       .init(increment: .init(value: value + 1)))
         XCTAssertEqual(try awaitPublisher(scopedStore.$state.dropFirst()),
-                       .init(counter: counter + 1))
+                       .init(value: value + 1))
     }
 
     func testScopeReversed() {
         // Arrange
-        let counter = 1099
-        let store = StoreOf<MainReducer>(state: .init(increment: .init(counter: counter)),
-                                         reducer: MainReducer(incrementReducer: IncrementReducer()))
-        let scopedStore = store.scope(onState: \.increment,
-                                      onAction: MainReducer.Action.increment)
+        let value = 1099
+        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
+                                         reducer: MainReducer())
+        let scopedStore = store.scope(mapState: \.increment,
+                                      mapAction: MainReducer.Action.increment)
 
         // Act
         store.submit(.increment(.increment))
 
         // Assert
         XCTAssertEqual(try awaitPublisher(store.$state.dropFirst()),
-                       .init(increment: .init(counter: counter + 1)))
+                       .init(increment: .init(value: value + 1)))
         XCTAssertEqual(try awaitPublisher(scopedStore.$state.dropFirst()),
-                       .init(counter: counter + 1))
+                       .init(value: value + 1))
     }
 }
