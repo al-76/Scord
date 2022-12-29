@@ -82,7 +82,7 @@ final class ReducerTests: XCTestCase {
                        .init(value: value + 1))
     }
 
-    func testScope() {
+    func testSendWithScope() {
         // Arrange
         let value = 1099
         let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
@@ -100,7 +100,7 @@ final class ReducerTests: XCTestCase {
                        .init(value: value + 1))
     }
 
-    func testScopeReversed() {
+    func testSendWithScopeMediated() {
         // Arrange
         let value = 1099
         let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
