@@ -16,9 +16,10 @@ struct Scope<State, Action, ScopedReducer: Reducer>: Reducer {
             return noEffect()
         }
 
-        return reducer.reduce(state: &state[keyPath: statePath],
-                              action: scopedAction)
-        .map { mapScopedAction($0) }
-        .eraseToAnyPublisher()
+        return reducer
+            .reduce(state: &state[keyPath: statePath],
+                    action: scopedAction)
+            .map { mapScopedAction($0) }
+            .eraseToAnyPublisher()
     }
 }

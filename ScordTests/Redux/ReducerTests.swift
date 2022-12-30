@@ -18,18 +18,15 @@ struct MainReducer: Reducer {
     enum Action {
         case increment(IncrementReducer.Action)
 
-        // TODO: to get rid of a boilerplate
-        func getIncrementAction() -> IncrementReducer.Action? {
-            switch self {
-            case .increment(let action):
-                return action
-            }
+        static func getIncrementAction(action: Action) -> IncrementReducer.Action? {
+            guard case .increment(let action) = action else { return nil }
+            return action
         }
     }
 
     var children: some Reducer<State, Action> {
         Scope(statePath: \.increment,
-              mapAction: { $0.getIncrementAction() },
+              mapAction: MainReducer.Action.getIncrementAction,
               mapScopedAction: MainReducer.Action.increment,
               reducer: IncrementReducer())
 
