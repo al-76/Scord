@@ -40,14 +40,6 @@ struct EmptyReducer<State, Action>: Reducer {
     }
 }
 
-struct ReducerContainer<State, Action, ReducerType: Reducer>: Reducer {
-    let reducer: ReducerType
-
-    func reduce(state: inout State, action: Action) -> Effect<Action> {
-        noEffect()
-    }
-}
-
 func noEffect<Action>() -> Effect<Action> {
     Empty().eraseToAnyPublisher()
 }
