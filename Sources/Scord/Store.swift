@@ -8,20 +8,21 @@
 import Combine
 import Foundation
 
-public typealias StoreOf<T: Reducer> = Store<T.Action, T.State>
+public typealias StoreOf<T: Reducer> = Store<T.State, T.Action>
 
 public extension Store {
+    @available(macOS 13.0.0, *)
     convenience init<T: Reducer>(state: T.State,
                                  reducer: T,
                                  middlewares: [any Middleware<T.State, T.Action>] = [])
-    where Action == T.Action, State == T.State {
+    where State == T.State, Action == T.Action {
         self.init(state: state,
                   reducer: reducer.reduce,
                   middlewares: middlewares.map { $0.callAsFunction(state:action:) })
     }
 }
 
-final public class Store<Action, State>: ObservableObject {
+final public class Store<State, Action>: ObservableObject {
     public typealias OnReduce<State, Action> = (inout State, Action) -> Void
     public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
 
@@ -51,9 +52,9 @@ final public class Store<Action, State>: ObservableObject {
 
     public func scope<ScopeState,
                       ScopeAction>(mapState: @escaping (State) -> ScopeState,
-                                   mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeAction, ScopeState> {
-        let store = Store<ScopeAction,
-                          ScopeState>(state: mapState(state)) { [weak self] state, action in
+                                   mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction> {
+        let store = Store<ScopeState,
+                          ScopeAction>(state: mapState(state)) { [weak self] state, action in
                               self?.submit(mapAction(action))
                           }
 
@@ -65,6 +66,7 @@ final public class Store<Action, State>: ObservableObject {
         return store
     }
 
+    @available(macOS 13.0.0, *)
     public func applyMiddlewares<ScopeState,
                                  ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
                                               mapState: @escaping (State) -> ScopeState,

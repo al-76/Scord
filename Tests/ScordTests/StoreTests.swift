@@ -1,5 +1,5 @@
 //
-//  ReducerTests.swift
+//  StoreTests.swift
 //  ScordTests
 //
 //  Created by Vyacheslav Konopkin on 27.12.2022.
@@ -79,13 +79,19 @@ struct SomeMiddleware: Middleware {
     }
 }
 
-final class ReducerTests: XCTestCase {
+final class StoreTests: XCTestCase {
+    private var middlewares: [(IncrementReducer.State, IncrementReducer.Action) -> Effect<IncrementReducer.Action>] = [
+        { IncrementMiddleware()(state: $0, action: $1) },
+        { SomeMiddleware()(state: $0, action: $1) }
+    ]
+
     func testSubmit() {
         // Arrange
         let value = 1099
-        let store = StoreOf<IncrementReducer>(state: .init(value: value),
-                                              reducer: IncrementReducer(),
-                                              middlewares: [IncrementMiddleware(), SomeMiddleware()])
+        let store = Store<IncrementReducer.State,
+                          IncrementReducer.Action>(state: .init(value: value),
+                                                   reducer: IncrementReducer().reduce(state:action:),
+                                                   middlewares: middlewares)
 
         // Act
         store.submit(.increment)
@@ -98,9 +104,10 @@ final class ReducerTests: XCTestCase {
     func testSubmitWithScope() {
         // Arrange
         let value = 1099
-        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
-                                         reducer: MainReducer())
-        store.applyMiddlewares(middlewares: [IncrementMiddleware(), SomeMiddleware()],
+        let store = Store<MainReducer.State,
+                          MainReducer.Action>(state: .init(increment: .init(value: value)),
+                                              reducer: MainReducer().reduce(state:action:))
+        store.applyMiddlewares(middlewares: middlewares,
                                mapState: \.increment,
                                mapAction: MainReducer.Action.getIncrementAction,
                                mapScopeAction: MainReducer.Action.increment)
@@ -120,9 +127,10 @@ final class ReducerTests: XCTestCase {
     func testSubmitWithScopeMediated() {
         // Arrange
         let value = 1099
-        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
-                                         reducer: MainReducer())
-        store.applyMiddlewares(middlewares: [IncrementMiddleware(), SomeMiddleware()],
+        let store = Store<MainReducer.State,
+                          MainReducer.Action>(state: .init(increment: .init(value: value)),
+                                              reducer: MainReducer().reduce(state:action:))
+        store.applyMiddlewares(middlewares: middlewares,
                                mapState: \.increment,
                                mapAction: MainReducer.Action.getIncrementAction,
                                mapScopeAction: MainReducer.Action.increment)
