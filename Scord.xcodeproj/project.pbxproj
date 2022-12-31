@@ -122,7 +122,8 @@
 		CD0F9D1A295B457500A0FF94 /* Redux */ = {
 			isa = PBXGroup;
 			children = (
-				CDC14089295E42EF003D56A4 /* Reducer */,
+				CDC14089295E42EF003D56A4 /* Internal */,
+				CD0F9D1B295B459F00A0FF94 /* Reducer.swift */,
 				CD0F9D1D295B45B600A0FF94 /* Store.swift */,
 				CD0F9D1F295B45DC00A0FF94 /* StateError.swift */,
 				CDC14085295E3A02003D56A4 /* Scope.swift */,
@@ -149,14 +150,13 @@
 			path = Redux;
 			sourceTree = "<group>";
 		};
-		CDC14089295E42EF003D56A4 /* Reducer */ = {
+		CDC14089295E42EF003D56A4 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				CD0F9D1B295B459F00A0FF94 /* Reducer.swift */,
 				CDC14083295E39D9003D56A4 /* ReducerBuilder.swift */,
 				CDC14087295E42E4003D56A4 /* ReducerCollection.swift */,
 			);
-			path = Reducer;
+			path = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

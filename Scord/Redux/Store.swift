@@ -8,9 +8,9 @@
 import Combine
 import Foundation
 
-typealias StoreOf<T: Reducer> = Store<T.Action, T.State>
+public typealias StoreOf<T: Reducer> = Store<T.Action, T.State>
 
-extension Store {
+public extension Store {
     convenience init<T: Reducer>(state: T.State,
                                  reducer: T,
                                  middlewares: [any Middleware<T.State, T.Action>] = [])
@@ -21,9 +21,9 @@ extension Store {
     }
 }
 
-final class Store<Action, State>: ObservableObject {
-    typealias OnReduce<State, Action> = (inout State, Action) -> Void
-    typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
+final public class Store<Action, State>: ObservableObject {
+    public typealias OnReduce<State, Action> = (inout State, Action) -> Void
+    public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
 
     @Published private(set) var state: State
 
@@ -39,7 +39,7 @@ final class Store<Action, State>: ObservableObject {
         self.middlewares = middlewares
     }
 
-    func submit(_ action: Action) {
+    public func submit(_ action: Action) {
         reducer(&state, action)
 
         Publishers
@@ -49,9 +49,9 @@ final class Store<Action, State>: ObservableObject {
             .store(in: &cancellable)
     }
 
-    func scope<ScopeState,
-               ScopeAction>(mapState: @escaping (State) -> ScopeState,
-                            mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeAction, ScopeState> {
+    public func scope<ScopeState,
+                      ScopeAction>(mapState: @escaping (State) -> ScopeState,
+                                   mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeAction, ScopeState> {
         let store = Store<ScopeAction,
                           ScopeState>(state: mapState(state)) { [weak self] state, action in
                               self?.submit(mapAction(action))
@@ -65,21 +65,22 @@ final class Store<Action, State>: ObservableObject {
         return store
     }
 
-    func applyMiddlewares<ScopeState, ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
-                                                   mapState: @escaping (State) -> ScopeState,
-                                                   mapAction: @escaping (Action) -> ScopeAction?,
-                                                   mapScopeAction: @escaping (ScopeAction) -> Action) {
+    public func applyMiddlewares<ScopeState,
+                                 ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
+                                              mapState: @escaping (State) -> ScopeState,
+                                              mapAction: @escaping (Action) -> ScopeAction?,
+                                              mapScopeAction: @escaping (ScopeAction) -> Action) {
         applyMiddlewares(middlewares: middlewares.map { $0.callAsFunction(state:action:) },
                          mapState: mapState,
                          mapAction: mapAction,
                          mapScopeAction: mapScopeAction)
     }
 
-    func applyMiddlewares<ScopeState,
-                          ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
-                                       mapState: @escaping (State) -> ScopeState,
-                                       mapAction: @escaping (Action) -> ScopeAction?,
-                                       mapScopeAction: @escaping (ScopeAction) -> Action) {
+    public func applyMiddlewares<ScopeState,
+                                 ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
+                                              mapState: @escaping (State) -> ScopeState,
+                                              mapAction: @escaping (Action) -> ScopeAction?,
+                                              mapScopeAction: @escaping (ScopeAction) -> Action) {
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
                             State,
                             Action) -> Effect<Action> = {

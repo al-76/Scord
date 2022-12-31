@@ -7,7 +7,7 @@
 
 import Combine
 
-protocol Reducer<State, Action> {
+public protocol Reducer<State, Action> {
     associatedtype State
     associatedtype Action
     associatedtype Children
@@ -21,18 +21,18 @@ protocol Reducer<State, Action> {
 typealias ReducerOf<T: Reducer> = Reducer<T.State, T.Action>
 
 extension Reducer where Children == Never {
-    var children: Children {
+    public var children: Children {
         fatalError("No children")
     }
 }
 
 extension Reducer where Children: Reducer, Children.State == State, Children.Action == Action {
-    func reduce(state: inout State, action: Action) {
+    public func reduce(state: inout State, action: Action) {
         children.reduce(state: &state, action: action)
     }
 }
 
-struct EmptyReducer<State, Action>: Reducer {
-    func reduce(state: inout State, action: Action) {
+public struct EmptyReducer<State, Action>: Reducer {
+    public func reduce(state: inout State, action: Action) {
     }
 }

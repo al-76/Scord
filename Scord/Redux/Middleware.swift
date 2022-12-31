@@ -7,15 +7,15 @@
 
 import Combine
 
-protocol Middleware<State, Action> {
+public protocol Middleware<State, Action> {
     associatedtype State
     associatedtype Action
 
     func callAsFunction(state: State, action: Action) -> Effect<Action>
 }
 
-typealias Effect<Action> = AnyPublisher<Action, Never>
+public typealias Effect<Action> = AnyPublisher<Action, Never>
 
-func noEffect<Action>() -> Effect<Action> {
+public func noEffect<Action>() -> Effect<Action> {
     Empty().eraseToAnyPublisher()
 }

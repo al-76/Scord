@@ -7,15 +7,15 @@
 
 import Foundation
 
-struct StateError: Equatable {
+public struct StateError: Equatable {
     let error: Error
 
-    static func ==(lhs: StateError, rhs: StateError) -> Bool {
+    public static func ==(lhs: StateError, rhs: StateError) -> Bool {
         type(of: lhs.error) == type(of: rhs.error) &&
         lhs.error.localizedDescription == rhs.error.localizedDescription
     }
 
-    func description() -> String {
+    public func description() -> String {
         error.localizedDescription
     }
 }
