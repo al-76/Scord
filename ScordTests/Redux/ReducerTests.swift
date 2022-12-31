@@ -61,23 +61,20 @@ struct IncrementReducer: Reducer {
 struct IncrementMiddleware: Middleware {
     func callAsFunction(state: IncrementReducer.State,
                         action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
-        switch action {
-        case .increment:
-            return Future { [value = state.value] promise in
-                promise(.success(.incrementResult(value + 1)))
-            }
-            .eraseToAnyPublisher()
-
-        default:
-            break
+        guard case .increment = action else {
+            return noEffect()
         }
 
-        return noEffect()
+        return Future { [value = state.value] promise in
+            promise(.success(.incrementResult(value + 1)))
+        }
+        .eraseToAnyPublisher()
     }
 }
 
 struct SomeMiddleware: Middleware {
-    func callAsFunction(state: IncrementReducer.State, action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
+    func callAsFunction(state: IncrementReducer.State,
+                        action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
         noEffect()
     }
 }
