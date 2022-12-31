@@ -11,11 +11,20 @@ import Foundation
 public typealias StoreOf<T: Reducer> = Store<T.State, T.Action>
 
 public extension Store {
-    @available(macOS 13.0.0, *)
+    convenience init<T: Reducer>(state: T.State,
+                                 reducer: T)
+    where T.State == State, T.Action == Action {
+        self.init(state: state,
+                  reducer: reducer.reduce)
+    }
+}
+
+public extension Store {
+    @available(iOS 16.0.0, *)
     convenience init<T: Reducer>(state: T.State,
                                  reducer: T,
                                  middlewares: [any Middleware<T.State, T.Action>] = [])
-    where State == T.State, Action == T.Action {
+    where T.State == State, T.Action == Action {
         self.init(state: state,
                   reducer: reducer.reduce,
                   middlewares: middlewares.map { $0.callAsFunction(state:action:) })
@@ -66,7 +75,7 @@ final public class Store<State, Action>: ObservableObject {
         return store
     }
 
-    @available(macOS 13.0.0, *)
+    @available(iOS 16.0.0, *)
     public func applyMiddlewares<ScopeState,
                                  ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
                                               mapState: @escaping (State) -> ScopeState,

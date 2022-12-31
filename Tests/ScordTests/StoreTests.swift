@@ -104,9 +104,8 @@ final class StoreTests: XCTestCase {
     func testSubmitWithScope() {
         // Arrange
         let value = 1099
-        let store = Store<MainReducer.State,
-                          MainReducer.Action>(state: .init(increment: .init(value: value)),
-                                              reducer: MainReducer().reduce(state:action:))
+        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
+                                       reducer: MainReducer())
         store.applyMiddlewares(middlewares: middlewares,
                                mapState: \.increment,
                                mapAction: MainReducer.Action.getIncrementAction,
@@ -127,9 +126,8 @@ final class StoreTests: XCTestCase {
     func testSubmitWithScopeMediated() {
         // Arrange
         let value = 1099
-        let store = Store<MainReducer.State,
-                          MainReducer.Action>(state: .init(increment: .init(value: value)),
-                                              reducer: MainReducer().reduce(state:action:))
+        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
+                                              reducer: MainReducer())
         store.applyMiddlewares(middlewares: middlewares,
                                mapState: \.increment,
                                mapAction: MainReducer.Action.getIncrementAction,
