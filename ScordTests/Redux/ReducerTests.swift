@@ -27,7 +27,6 @@ struct MainReducer: Reducer {
     var children: some Reducer<State, Action> {
         Scope(statePath: \.increment,
               mapAction: MainReducer.Action.getIncrementAction,
-              mapScopedAction: MainReducer.Action.increment,
               reducer: IncrementReducer())
 
         EmptyReducer()
@@ -48,7 +47,20 @@ struct IncrementReducer: Reducer {
         case incrementResult(Int)
     }
 
-    func reduce(state: inout State, action: Action) -> Effect<Action> {
+    func reduce(state: inout State, action: Action) {
+        switch action {
+        case .incrementResult(let value):
+            state.value = value
+
+        default:
+            break
+        }
+    }
+}
+
+struct IncrementMiddleware: Middleware {
+    func callAsFunction(state: IncrementReducer.State,
+                        action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
         switch action {
         case .increment:
             return Future { [value = state.value] promise in
@@ -56,11 +68,17 @@ struct IncrementReducer: Reducer {
             }
             .eraseToAnyPublisher()
 
-        case .incrementResult(let value):
-            state.value = value
+        default:
+            break
         }
 
         return noEffect()
+    }
+}
+
+struct SomeMiddleware: Middleware {
+    func callAsFunction(state: IncrementReducer.State, action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
+        noEffect()
     }
 }
 
@@ -69,7 +87,8 @@ final class ReducerTests: XCTestCase {
         // Arrange
         let value = 1099
         let store = StoreOf<IncrementReducer>(state: .init(value: value),
-                                              reducer: IncrementReducer())
+                                              reducer: IncrementReducer(),
+                                              middlewares: [IncrementMiddleware(), SomeMiddleware()])
 
         // Act
         store.submit(.increment)
@@ -84,6 +103,10 @@ final class ReducerTests: XCTestCase {
         let value = 1099
         let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
                                          reducer: MainReducer())
+        store.applyMiddlewares(middlewares: [IncrementMiddleware(), SomeMiddleware()],
+                               mapState: \.increment,
+                               mapAction: MainReducer.Action.getIncrementAction,
+                               mapScopeAction: MainReducer.Action.increment)
         let scopedStore = store.scope(mapState: \.increment,
                                       mapAction: MainReducer.Action.increment)
 
@@ -102,6 +125,10 @@ final class ReducerTests: XCTestCase {
         let value = 1099
         let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
                                          reducer: MainReducer())
+        store.applyMiddlewares(middlewares: [IncrementMiddleware(), SomeMiddleware()],
+                               mapState: \.increment,
+                               mapAction: MainReducer.Action.getIncrementAction,
+                               mapScopeAction: MainReducer.Action.increment)
         let scopedStore = store.scope(mapState: \.increment,
                                       mapAction: MainReducer.Action.increment)
 

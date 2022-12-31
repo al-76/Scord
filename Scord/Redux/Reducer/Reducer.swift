@@ -7,8 +7,6 @@
 
 import Combine
 
-typealias Effect<Action> = AnyPublisher<Action, Never>
-
 protocol Reducer<State, Action> {
     associatedtype State
     associatedtype Action
@@ -17,7 +15,7 @@ protocol Reducer<State, Action> {
     @ReducerBuilder<State, Action>
     var children: Children { get }
 
-    func reduce(state: inout State, action: Action) -> Effect<Action>
+    func reduce(state: inout State, action: Action)
 }
 
 typealias ReducerOf<T: Reducer> = Reducer<T.State, T.Action>
@@ -29,17 +27,12 @@ extension Reducer where Children == Never {
 }
 
 extension Reducer where Children: Reducer, Children.State == State, Children.Action == Action {
-    func reduce(state: inout State, action: Action) -> Effect<Action> {
+    func reduce(state: inout State, action: Action) {
         children.reduce(state: &state, action: action)
     }
 }
 
 struct EmptyReducer<State, Action>: Reducer {
-    func reduce(state: inout State, action: Action) -> Effect<Action> {
-        noEffect()
+    func reduce(state: inout State, action: Action) {
     }
-}
-
-func noEffect<Action>() -> Effect<Action> {
-    Empty().eraseToAnyPublisher()
 }

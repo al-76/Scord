@@ -169,11 +169,9 @@ where T0.State == T1.State, T0.Action == T1.Action
         self.reducer1 = reducer1
     }
 
-    func reduce(state: inout T0.State, action: T0.Action) -> Effect<T0.Action> {
-        Publishers.Merge(
-            reducer0.reduce(state: &state, action: action),
-            reducer1.reduce(state: &state, action: action)
-        ).eraseToAnyPublisher()
+    func reduce(state: inout T0.State, action: T0.Action) {
+        reducer0.reduce(state: &state, action: action)
+        reducer1.reduce(state: &state, action: action)
     }
 }
 

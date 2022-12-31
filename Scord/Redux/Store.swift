@@ -8,43 +8,53 @@
 import Combine
 import Foundation
 
-typealias StoreOf<ReducerType: Reducer> = Store<ReducerType.Action, ReducerType.State>
+typealias StoreOf<T: Reducer> = Store<T.Action, T.State>
 
 extension Store {
-    convenience init<ReducerType: Reducer>(state: ReducerType.State,
-                                           reducer: ReducerType) where Action == ReducerType.Action, State == ReducerType.State {
-        self.init(state: state) {
-            reducer.reduce(state: &$0, action: $1)
-        }
+    convenience init<T: Reducer>(state: T.State,
+                                 reducer: T,
+                                 middlewares: [any Middleware<T.State, T.Action>] = [])
+    where Action == T.Action, State == T.State {
+        self.init(state: state,
+                  reducer: reducer.reduce,
+                  middlewares: middlewares.map { $0.callAsFunction(state:action:) })
     }
 }
 
 final class Store<Action, State>: ObservableObject {
-    typealias OnReduce<State, Action> = (inout State, Action) -> Effect<Action>
+    typealias OnReduce<State, Action> = (inout State, Action) -> Void
+    typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
 
     @Published private(set) var state: State
 
     private let reducer: OnReduce<State, Action>
+    private var middlewares: [OnMiddleware<State, Action>]
     private var cancellable = Set<AnyCancellable>()
 
-    init(state: State, reducer: @escaping OnReduce<State, Action>) {
+    init(state: State,
+         reducer: @escaping OnReduce<State, Action>,
+         middlewares: [OnMiddleware<State, Action>] = []) {
         self.state = state
         self.reducer = reducer
+        self.middlewares = middlewares
     }
 
     func submit(_ action: Action) {
         reducer(&state, action)
+
+        Publishers
+            .MergeMany(middlewares.map { $0(state, action) })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in self?.submit($0) })
             .store(in: &cancellable)
     }
 
-    func scope<ScopeState, ScopeAction>(mapState: @escaping (State) -> ScopeState,
-                                        mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeAction, ScopeState> {
+    func scope<ScopeState,
+               ScopeAction>(mapState: @escaping (State) -> ScopeState,
+                            mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeAction, ScopeState> {
         let store = Store<ScopeAction,
                           ScopeState>(state: mapState(state)) { [weak self] state, action in
                               self?.submit(mapAction(action))
-                              return noEffect()
                           }
 
         $state
@@ -53,5 +63,38 @@ final class Store<Action, State>: ObservableObject {
             .assign(to: &store.$state)
 
         return store
+    }
+
+    func applyMiddlewares<ScopeState, ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
+                                                   mapState: @escaping (State) -> ScopeState,
+                                                   mapAction: @escaping (Action) -> ScopeAction?,
+                                                   mapScopeAction: @escaping (ScopeAction) -> Action) {
+        applyMiddlewares(middlewares: middlewares.map { $0.callAsFunction(state:action:) },
+                         mapState: mapState,
+                         mapAction: mapAction,
+                         mapScopeAction: mapScopeAction)
+    }
+
+    func applyMiddlewares<ScopeState,
+                          ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
+                                       mapState: @escaping (State) -> ScopeState,
+                                       mapAction: @escaping (Action) -> ScopeAction?,
+                                       mapScopeAction: @escaping (ScopeAction) -> Action) {
+        let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
+                            State,
+                            Action) -> Effect<Action> = {
+            guard let action = mapAction($2) else { return noEffect() }
+            return $0(mapState($1), action)
+                .map { mapScopeAction($0) }
+                .eraseToAnyPublisher()
+        }
+
+        self.middlewares += middlewares.map {
+            bind(mapMiddleware)($0)
+        }
+    }
+
+    private func bind<A, B, C, D>(_ f: @escaping (A, B, C) -> D) -> (A) -> (B, C) -> D {
+        { a in { b, c in f(a, b, c) } }
     }
 }
