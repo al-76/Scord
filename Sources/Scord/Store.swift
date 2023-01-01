@@ -50,13 +50,13 @@ final public class Store<State, Action>: ObservableObject {
     }
 
     public func submit(_ action: Action) {
-        reducer(&state, action)
-
         Publishers
             .MergeMany(middlewares.map { $0(state, action) })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in self?.submit($0) })
             .store(in: &cancellable)
+
+        reducer(&state, action)
     }
 
     public func scope<ScopeState,
