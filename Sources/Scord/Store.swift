@@ -35,7 +35,7 @@ final public class Store<State, Action>: ObservableObject {
     public typealias OnReduce<State, Action> = (inout State, Action) -> Void
     public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
 
-    @Published private(set) var state: State
+    @Published public private(set) var state: State
 
     private let reducer: OnReduce<State, Action>
     private var middlewares: [OnMiddleware<State, Action>]
