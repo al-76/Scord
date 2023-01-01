@@ -25,8 +25,8 @@ struct MainReducer: Reducer {
     }
 
     var children: some Reducer<State, Action> {
-        Scope(statePath: \.increment,
-              mapAction: MainReducer.Action.getIncrementAction,
+        Scope(state: \.increment,
+              action: MainReducer.Action.getIncrementAction,
               reducer: IncrementReducer())
 
         EmptyReducer()

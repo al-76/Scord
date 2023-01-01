@@ -6,9 +6,17 @@
 //
 
 public struct Scope<State, Action, ScopedReducer: Reducer>: Reducer {
-    let statePath: WritableKeyPath<State, ScopedReducer.State>
-    let mapAction: (Action) -> ScopedReducer.Action?
-    let reducer: ScopedReducer
+    private let statePath: WritableKeyPath<State, ScopedReducer.State>
+    private let mapAction: (Action) -> ScopedReducer.Action?
+    private let reducer: ScopedReducer
+
+    public init(state statePath: WritableKeyPath<State, ScopedReducer.State>,
+                action mapAction: @escaping (Action) -> ScopedReducer.Action?,
+                reducer: ScopedReducer) {
+        self.statePath = statePath
+        self.mapAction = mapAction
+        self.reducer = reducer
+    }
 
     public func reduce(state: inout State, action: Action) {
         guard let scopedAction = mapAction(action) else { return }
