@@ -8,7 +8,11 @@
 import Foundation
 
 public struct StateError: Equatable {
-    let error: Error
+    private let error: Error
+
+    public init(_ error: Error) {
+        self.error = error
+    }
 
     public static func ==(lhs: StateError, rhs: StateError) -> Bool {
         type(of: lhs.error) == type(of: rhs.error) &&
