@@ -11,7 +11,7 @@ public protocol Middleware<State, Action> {
     associatedtype State
     associatedtype Action
 
-    func callAsFunction(state: State, action: Action) -> Effect<Action>
+    func effect(state: State, action: Action) -> Effect<Action>
 }
 
 public typealias Effect<Action> = AnyPublisher<Action, Never>

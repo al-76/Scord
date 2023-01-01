@@ -59,7 +59,7 @@ struct IncrementReducer: Reducer {
 }
 
 struct IncrementMiddleware: Middleware {
-    func callAsFunction(state: IncrementReducer.State,
+    func effect(state: IncrementReducer.State,
                         action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
         guard case .increment = action else {
             return noEffect()
@@ -73,7 +73,7 @@ struct IncrementMiddleware: Middleware {
 }
 
 struct SomeMiddleware: Middleware {
-    func callAsFunction(state: IncrementReducer.State,
+    func effect(state: IncrementReducer.State,
                         action: IncrementReducer.Action) -> Effect<IncrementReducer.Action> {
         noEffect()
     }
@@ -81,8 +81,8 @@ struct SomeMiddleware: Middleware {
 
 final class StoreTests: XCTestCase {
     private var middlewares: [(IncrementReducer.State, IncrementReducer.Action) -> Effect<IncrementReducer.Action>] = [
-        { IncrementMiddleware()(state: $0, action: $1) },
-        { SomeMiddleware()(state: $0, action: $1) }
+        { IncrementMiddleware().effect(state: $0, action: $1) },
+        { SomeMiddleware().effect(state: $0, action: $1) }
     ]
 
     func testSubmit() {

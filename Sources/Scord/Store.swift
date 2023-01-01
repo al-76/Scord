@@ -27,7 +27,7 @@ public extension Store {
     where T.State == State, T.Action == Action {
         self.init(state: state,
                   reducer: reducer.reduce,
-                  middlewares: middlewares.map { $0.callAsFunction(state:action:) })
+                  middlewares: middlewares.map { $0.effect(state:action:) })
     }
 }
 
@@ -81,7 +81,7 @@ final public class Store<State, Action>: ObservableObject {
                                               mapState: @escaping (State) -> ScopeState,
                                               mapAction: @escaping (Action) -> ScopeAction?,
                                               mapScopeAction: @escaping (ScopeAction) -> Action) {
-        applyMiddlewares(middlewares: middlewares.map { $0.callAsFunction(state:action:) },
+        applyMiddlewares(middlewares: middlewares.map { $0.effect(state:action:) },
                          mapState: mapState,
                          mapAction: mapAction,
                          mapScopeAction: mapScopeAction)
