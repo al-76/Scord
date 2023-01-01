@@ -14,6 +14,11 @@ public struct StateError: Equatable {
         self.error = error
     }
 
+    public init?(_ error: Error?) {
+        guard let error else { return nil }
+        self.error = error
+    }
+
     public static func ==(lhs: StateError, rhs: StateError) -> Bool {
         type(of: lhs.error) == type(of: rhs.error) &&
         lhs.error.localizedDescription == rhs.error.localizedDescription
