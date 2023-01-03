@@ -88,10 +88,14 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
         Publishers
             .MergeMany(middlewares.map { $0(state, action) })
             .receive(on: scheduler)
-            .sink(receiveValue: { [weak self] in self?.submit($0) })
-            .store(in: &cancellable)
+            .collect()
+            .sink(receiveValue: { [weak self] actions in
+                guard let self else { return }
 
-        reducer(&state, action)
+                self.reducer(&self.state, action)
+                actions.forEach { self.submit($0) }
+            })
+            .store(in: &cancellable)
     }
 
     public func scope<ScopeState,

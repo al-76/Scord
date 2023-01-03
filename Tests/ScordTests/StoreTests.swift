@@ -40,6 +40,7 @@ struct MainReducer: Reducer {
 struct IncrementReducer: Reducer {
     struct State: Equatable {
         var value: Int = 0
+        var isLoading = false
     }
 
     enum Action {
@@ -50,11 +51,12 @@ struct IncrementReducer: Reducer {
     func reduce(state: inout State, action: Action) {
         print("reduce \(action)")
         switch action {
+        case .increment:
+            state.isLoading = true
+
         case .incrementResult(let value):
             state.value = value
-
-        default:
-            break
+            state.isLoading = false
         }
     }
 }
