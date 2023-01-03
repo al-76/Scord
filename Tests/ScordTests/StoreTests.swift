@@ -48,6 +48,7 @@ struct IncrementReducer: Reducer {
     }
 
     func reduce(state: inout State, action: Action) {
+        print("reduce \(action)")
         switch action {
         case .incrementResult(let value):
             state.value = value
@@ -64,6 +65,8 @@ struct IncrementMiddleware: Middleware {
         guard case .increment = action else {
             return noEffect()
         }
+
+        print("effect \(action)")
 
         return Future { [value = state.value] promise in
             promise(.success(.incrementResult(value + 1)))
@@ -88,24 +91,23 @@ final class StoreTests: XCTestCase {
     func testSubmit() {
         // Arrange
         let value = 1099
-        let store = Store<IncrementReducer.State,
-                          IncrementReducer.Action>(state: .init(value: value),
-                                                   reducer: IncrementReducer().reduce(state:action:),
-                                                   middlewares: middlewares)
+        let store = TestStoreOf<IncrementReducer>(state: .init(value: value),
+                                                reducer: IncrementReducer().reduce(state:action:),
+                                                middlewares: middlewares,
+                                                scheduler: ImmediateScheduler.shared)
 
         // Act
         store.submit(.increment)
 
         // Assert
-        XCTAssertEqual(try awaitPublisher(store.$state.dropFirst()),
-                       .init(value: value + 1))
+        XCTAssertEqual(store.state, .init(value: value + 1))
     }
 
     func testSubmitWithScope() {
         // Arrange
         let value = 1099
-        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
-                                       reducer: MainReducer())
+        let store = TestStoreOf<MainReducer>(state: .init(increment: .init(value: value)),
+                                           reducer: MainReducer())
         store.applyMiddlewares(middlewares: middlewares,
                                mapState: \.increment,
                                mapAction: MainReducer.Action.getIncrementAction,
@@ -117,17 +119,15 @@ final class StoreTests: XCTestCase {
         scopedStore.submit(.increment)
 
         // Assert
-        XCTAssertEqual(try awaitPublisher(store.$state.dropFirst()),
-                       .init(increment: .init(value: value + 1)))
-        XCTAssertEqual(try awaitPublisher(scopedStore.$state.dropFirst()),
-                       .init(value: value + 1))
+        XCTAssertEqual(scopedStore.state, .init(value: value + 1))
+        XCTAssertEqual(scopedStore.state, store.state.increment)
     }
 
     func testSubmitWithScopeMediated() {
         // Arrange
         let value = 1099
-        let store = StoreOf<MainReducer>(state: .init(increment: .init(value: value)),
-                                              reducer: MainReducer())
+        let store = TestStoreOf<MainReducer>(state: .init(increment: .init(value: value)),
+                                           reducer: MainReducer())
         store.applyMiddlewares(middlewares: middlewares,
                                mapState: \.increment,
                                mapAction: MainReducer.Action.getIncrementAction,
@@ -139,9 +139,7 @@ final class StoreTests: XCTestCase {
         store.submit(.increment(.increment))
 
         // Assert
-        XCTAssertEqual(try awaitPublisher(store.$state.dropFirst()),
-                       .init(increment: .init(value: value + 1)))
-        XCTAssertEqual(try awaitPublisher(scopedStore.$state.dropFirst()),
-                       .init(value: value + 1))
+        XCTAssertEqual(scopedStore.state, .init(value: value + 1))
+        XCTAssertEqual(scopedStore.state, store.state.increment)
     }
 }

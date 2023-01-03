@@ -8,30 +8,62 @@
 import Combine
 import Foundation
 
-public typealias StoreOf<T: Reducer> = Store<T.State, T.Action>
+public typealias StoreOf<T: Reducer> = Store<T.State, T.Action, DispatchQueue>
+public typealias TestStoreOf<T: Reducer> = Store<T.State, T.Action, ImmediateScheduler>
 
-public extension Store {
-    convenience init<T: Reducer>(state: T.State,
-                                 reducer: T)
-    where T.State == State, T.Action == Action {
-        self.init(state: state,
-                  reducer: reducer.reduce)
-    }
-}
-
-public extension Store {
-    @available(iOS 16.0.0, *)
+public extension Store where Scheduler == DispatchQueue {
     convenience init<T: Reducer>(state: T.State,
                                  reducer: T,
-                                 middlewares: [any Middleware<T.State, T.Action>] = [])
+                                 scheduler: Scheduler = .main)
     where T.State == State, T.Action == Action {
         self.init(state: state,
                   reducer: reducer.reduce,
-                  middlewares: middlewares.map { $0.effect(state:action:) })
+                  middlewares: [],
+                  scheduler: scheduler)
     }
 }
 
-final public class Store<State, Action>: ObservableObject {
+public extension Store where Scheduler == ImmediateScheduler {
+    convenience init<T: Reducer>(state: T.State,
+                                 reducer: T,
+                                 scheduler: Scheduler = .shared)
+    where T.State == State, T.Action == Action {
+        self.init(state: state,
+                  reducer: reducer.reduce,
+                  middlewares: [],
+                  scheduler: scheduler)
+    }
+}
+
+public extension Store where Scheduler == DispatchQueue {
+    @available(iOS 16.0.0, *)
+    convenience init<T: Reducer>(state: T.State,
+                                 reducer: T,
+                                 middlewares: [any Middleware<T.State, T.Action>] = [],
+                                 scheduler: Scheduler = .main)
+    where T.State == State, T.Action == Action {
+        self.init(state: state,
+                  reducer: reducer.reduce,
+                  middlewares: middlewares.map { $0.effect(state:action:) },
+                  scheduler: scheduler)
+    }
+}
+
+public extension Store where Scheduler == ImmediateScheduler {
+    @available(iOS 16.0.0, *)
+    convenience init<T: Reducer>(state: T.State,
+                                 reducer: T,
+                                 middlewares: [any Middleware<T.State, T.Action>] = [],
+                                 scheduler: Scheduler = .shared)
+    where T.State == State, T.Action == Action {
+        self.init(state: state,
+                  reducer: reducer.reduce,
+                  middlewares: middlewares.map { $0.effect(state:action:) },
+                  scheduler: scheduler)
+    }
+}
+
+final public class Store<State, Action, Scheduler: Combine.Scheduler>: ObservableObject {
     public typealias OnReduce<State, Action> = (inout State, Action) -> Void
     public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
 
@@ -40,19 +72,22 @@ final public class Store<State, Action>: ObservableObject {
     private let reducer: OnReduce<State, Action>
     private var middlewares: [OnMiddleware<State, Action>]
     private var cancellable = Set<AnyCancellable>()
+    private let scheduler: Scheduler
 
     init(state: State,
          reducer: @escaping OnReduce<State, Action>,
-         middlewares: [OnMiddleware<State, Action>] = []) {
+         middlewares: [OnMiddleware<State, Action>] = [],
+         scheduler: Scheduler = DispatchQueue.main) {
         self.state = state
         self.reducer = reducer
         self.middlewares = middlewares
+        self.scheduler = scheduler
     }
 
     public func submit(_ action: Action) {
         Publishers
             .MergeMany(middlewares.map { $0(state, action) })
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .sink(receiveValue: { [weak self] in self?.submit($0) })
             .store(in: &cancellable)
 
@@ -61,15 +96,23 @@ final public class Store<State, Action>: ObservableObject {
 
     public func scope<ScopeState,
                       ScopeAction>(mapState: @escaping (State) -> ScopeState,
-                                   mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction> {
+                                   mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
+        let reduce: OnReduce<ScopeState, ScopeAction> = { [weak self] in
+            guard let self else { return }
+            self.submit(mapAction($1))
+            $0 = mapState(self.state)
+        }
         let store = Store<ScopeState,
-                          ScopeAction>(state: mapState(state)) { [weak self] state, action in
-                              self?.submit(mapAction(action))
-                          }
+                          ScopeAction,
+                          Scheduler>(state: mapState(state),
+                                     reducer: reduce,
+                                     middlewares: [],
+                                     scheduler: scheduler)
 
         $state
+            .dropFirst()
             .map(mapState)
-            .receive(on: DispatchQueue.main)
+            .receive(on: scheduler)
             .assign(to: &store.$state)
 
         return store
