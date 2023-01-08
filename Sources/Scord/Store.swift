@@ -99,8 +99,8 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
     }
 
     public func scope<ScopeState,
-                      ScopeAction>(mapState: @escaping (State) -> ScopeState,
-                                   mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
+                      ScopeAction>(state mapState: @escaping (State) -> ScopeState,
+                                   action mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
         let reduce: OnReduce<ScopeState, ScopeAction> = { [weak self] in
             guard let self else { return }
             self.submit(mapAction($1))
@@ -122,29 +122,60 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
         return store
     }
 
+    public func scope<ScopeState: Identifiable,
+                      ScopeAction>(id: ScopeState.ID,
+                                   state statePath: KeyPath<State, [ScopeState.ID: ScopeState]>,
+                                   action mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
+        scope(state: { $0[keyPath: statePath][id]! },
+              action: mapAction)
+    }
+
     @available(iOS 16.0.0, *)
     public func applyMiddlewares<ScopeState,
                                  ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
-                                              mapState: @escaping (State) -> ScopeState,
-                                              mapAction: @escaping (Action) -> ScopeAction?,
-                                              mapScopeAction: @escaping (ScopeAction) -> Action) {
+                                              state mapState: @escaping (State) -> ScopeState,
+                                              action mapAction: @escaping (Action) -> ScopeAction?,
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) {
         applyMiddlewares(middlewares: middlewares.map { $0.effect(state:action:) },
-                         mapState: mapState,
-                         mapAction: mapAction,
-                         mapScopeAction: mapScopeAction)
+                         state: mapState,
+                         action: mapAction,
+                         scopeAction: mapScopeAction)
     }
 
     public func applyMiddlewares<ScopeState,
                                  ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
-                                              mapState: @escaping (State) -> ScopeState,
-                                              mapAction: @escaping (Action) -> ScopeAction?,
-                                              mapScopeAction: @escaping (ScopeAction) -> Action) {
+                                              state mapState: @escaping (State) -> ScopeState,
+                                              action mapAction: @escaping (Action) -> ScopeAction?,
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) {
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
                             State,
                             Action) -> Effect<Action> = {
             guard let action = mapAction($2) else { return noEffect() }
             return $0(mapState($1), action)
                 .map { mapScopeAction($0) }
+                .eraseToAnyPublisher()
+        }
+
+        self.middlewares += middlewares.map {
+            bind(mapMiddleware)($0)
+        }
+    }
+
+    public func applyMiddlewaresId<ScopeState: Identifiable,
+                                   ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
+                                                state statePath: KeyPath<State, [ScopeState.ID: ScopeState]>,
+                                                action mapAction: @escaping (Action) -> (ScopeState.ID, ScopeAction)?,
+                                                scopeAction mapScopeAction: @escaping (ScopeState.ID, ScopeAction) -> Action) {
+        let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
+                            State,
+                            Action) -> Effect<Action> = {
+
+            guard let (id, action) = mapAction($2) else {
+                return noEffect()
+            }
+
+            return $0($1[keyPath: statePath][id]!, action)
+                .map { mapScopeAction(id, $0) }
                 .eraseToAnyPublisher()
         }
 

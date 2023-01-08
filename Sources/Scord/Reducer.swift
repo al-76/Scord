@@ -36,3 +36,11 @@ public struct EmptyReducer<State, Action>: Reducer {
     public func reduce(state: inout State, action: Action) {
     }
 }
+
+public struct Reduce<State, Action>: Reducer {
+    let onReduce: (inout State, Action) -> Void
+
+    public func reduce(state: inout State, action: Action) {
+        onReduce(&state, action)
+    }
+}

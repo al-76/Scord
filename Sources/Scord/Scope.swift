@@ -24,3 +24,23 @@ public struct Scope<State, Action, ScopedReducer: Reducer>: Reducer {
                        action: scopedAction)
     }
 }
+
+public struct ScopeId<State, Action, ScopedReducer: Reducer>: Reducer where ScopedReducer.State: Identifiable {
+    private let statePath: WritableKeyPath<State, [ScopedReducer.State.ID: ScopedReducer.State]>
+    private let mapAction: (Action) -> (ScopedReducer.State.ID, ScopedReducer.Action)?
+    private let reducer: ScopedReducer
+
+    public init(state statePath: WritableKeyPath<State, [ScopedReducer.State.ID: ScopedReducer.State]>,
+                action mapAction: @escaping (Action) -> (ScopedReducer.State.ID, ScopedReducer.Action)?,
+                reducer: ScopedReducer) {
+        self.statePath = statePath
+        self.mapAction = mapAction
+        self.reducer = reducer
+    }
+
+    public func reduce(state: inout State, action: Action) {
+        guard let (id, scopedAction) = mapAction(action) else { return }
+        reducer.reduce(state: &state[keyPath: statePath][id]!,
+                       action: scopedAction)
+    }
+}
