@@ -14,7 +14,8 @@ struct MainReducer: Reducer {
     struct State: Equatable {
         var increment: IncrementReducer.State
 
-        var rows: [IncrementReducer.State.ID: IncrementReducer.State] = [:]
+        var rows: ScordOrderedDict<IncrementReducer.State.ID,
+                                   IncrementReducer.State> = [:]
     }
 
     enum Action {
@@ -176,7 +177,7 @@ final class StoreTests: XCTestCase {
                                  action: MainReducer.Action.getIncrementActionId,
                                  scopeAction: { MainReducer.Action.incrementId($0, $1) })
         var scopedStores = [TestStoreOf<IncrementReducer>]()
-        for id in ids {
+        ids.forEach { id in
             scopedStores.append(store.scope(id: id,
                                             state: \.rows,
                                             action: { MainReducer.Action.incrementId(id, $0) }))
