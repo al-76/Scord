@@ -26,11 +26,11 @@ public struct Scope<State, Action, ScopedReducer: Reducer>: Reducer {
 }
 
 public struct ScopeId<State, Action, ScopedReducer: Reducer>: Reducer where ScopedReducer.State: Identifiable {
-    private let statePath: WritableKeyPath<State, ScordOrderedDict<ScopedReducer.State.ID, ScopedReducer.State>>
+    private let statePath: WritableKeyPath<State, IdDictionary<ScopedReducer.State>>
     private let mapAction: (Action) -> (ScopedReducer.State.ID, ScopedReducer.Action)?
     private let reducer: ScopedReducer
 
-    public init(state statePath: WritableKeyPath<State, ScordOrderedDict<ScopedReducer.State.ID, ScopedReducer.State>>,
+    public init(state statePath: WritableKeyPath<State, IdDictionary<ScopedReducer.State>>,
                 action mapAction: @escaping (Action) -> (ScopedReducer.State.ID, ScopedReducer.Action)?,
                 reducer: ScopedReducer) {
         self.statePath = statePath

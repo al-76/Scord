@@ -7,4 +7,4 @@
 
 import OrderedCollections
 
-public typealias ScordOrderedDict = OrderedDictionary
+public typealias IdDictionary<T> = OrderedDictionary<T.ID, T> where T: Identifiable

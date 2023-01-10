@@ -124,7 +124,7 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
 
     public func scope<ScopeState: Identifiable,
                       ScopeAction>(id: ScopeState.ID,
-                                   state statePath: KeyPath<State, ScordOrderedDict<ScopeState.ID, ScopeState>>,
+                                   state statePath: KeyPath<State, IdDictionary<ScopeState>>,
                                    action mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
         scope(state: { $0[keyPath: statePath][id]! },
               action: mapAction)
@@ -163,7 +163,7 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
 
     public func applyMiddlewaresId<ScopeState: Identifiable,
                                    ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
-                                                state statePath: KeyPath<State, ScordOrderedDict<ScopeState.ID, ScopeState>>,
+                                                state statePath: KeyPath<State, IdDictionary<ScopeState>>,
                                                 action mapAction: @escaping (Action) -> (ScopeState.ID, ScopeAction)?,
                                                 scopeAction mapScopeAction: @escaping (ScopeState.ID, ScopeAction) -> Action) {
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,

@@ -14,8 +14,7 @@ struct MainReducer: Reducer {
     struct State: Equatable {
         var increment: IncrementReducer.State
 
-        var rows: ScordOrderedDict<IncrementReducer.State.ID,
-                                   IncrementReducer.State> = [:]
+        var rows: IdDictionary<IncrementReducer.State> = [:]
     }
 
     enum Action {
