@@ -8,7 +8,7 @@
 import Combine
 
 public struct ReducerCollection<Element: Reducer>: Reducer {
-    var elements: [Element]
+    public var elements: [Element]
 
     public func reduce(state: inout Element.State,
                        action: Element.Action) {
