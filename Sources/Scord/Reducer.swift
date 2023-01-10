@@ -18,16 +18,16 @@ public protocol Reducer<State, Action> {
     func reduce(state: inout State, action: Action)
 }
 
-typealias ReducerOf<T: Reducer> = Reducer<T.State, T.Action>
+public typealias ReducerOf<T: Reducer> = Reducer<T.State, T.Action>
 
-extension Reducer where Children == Never {
-    public var children: Children {
+public extension Reducer where Children == Never {
+    var children: Children {
         fatalError("No children")
     }
 }
 
-extension Reducer where Children: Reducer, Children.State == State, Children.Action == Action {
-    public func reduce(state: inout State, action: Action) {
+public extension Reducer where Children: Reducer, Children.State == State, Children.Action == Action {
+    func reduce(state: inout State, action: Action) {
         children.reduce(state: &state, action: action)
     }
 }
@@ -38,7 +38,7 @@ public struct EmptyReducer<State, Action>: Reducer {
 }
 
 public struct Reduce<State, Action>: Reducer {
-    let onReduce: (inout State, Action) -> Void
+    public let onReduce: (inout State, Action) -> Void
 
     public func reduce(state: inout State, action: Action) {
         onReduce(&state, action)
