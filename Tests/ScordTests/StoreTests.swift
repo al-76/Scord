@@ -128,10 +128,10 @@ final class StoreTests: XCTestCase {
         let value = 1099
         let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: id, value: value)),
                                              reducer: MainReducer())
-        store.applyMiddlewares(middlewares: middlewares,
-                               state: \.increment,
-                               action: MainReducer.Action.getIncrementAction,
-                               scopeAction: MainReducer.Action.increment)
+            .applyMiddlewares(middlewares: middlewares,
+                              state: \.increment,
+                              action: MainReducer.Action.getIncrementAction,
+                              scopeAction: MainReducer.Action.increment)
         let scopedStore = store.scope(state: \.increment,
                                       action: MainReducer.Action.increment)
 
@@ -149,10 +149,10 @@ final class StoreTests: XCTestCase {
         let value = 1099
         let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: id, value: value)),
                                              reducer: MainReducer())
-        store.applyMiddlewares(middlewares: middlewares,
-                               state: \.increment,
-                               action: MainReducer.Action.getIncrementAction,
-                               scopeAction: MainReducer.Action.increment)
+            .applyMiddlewares(middlewares: middlewares,
+                              state: \.increment,
+                              action: MainReducer.Action.getIncrementAction,
+                              scopeAction: MainReducer.Action.increment)
         let scopedStore = store.scope(state: \.increment,
                                       action: MainReducer.Action.increment)
 
@@ -171,10 +171,10 @@ final class StoreTests: XCTestCase {
         let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: UUID()),
                                                           rows: ids.reduce(into: [:]) { $0[$1] = .init(id: $1, value: value) }),
                                              reducer: MainReducer())
-        store.applyMiddlewaresId(middlewares: middlewares,
-                                 state: \.rows,
-                                 action: MainReducer.Action.getIncrementActionId,
-                                 scopeAction: { MainReducer.Action.incrementId($0, $1) })
+            .applyMiddlewaresId(middlewares: middlewares,
+                                state: \.rows,
+                                action: MainReducer.Action.getIncrementActionId,
+                                scopeAction: { MainReducer.Action.incrementId($0, $1) })
         var scopedStores = [TestStoreOf<IncrementReducer>]()
         ids.forEach { id in
             scopedStores.append(store.scope(id: id,

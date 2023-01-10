@@ -135,7 +135,7 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
                                  ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
                                               state mapState: @escaping (State) -> ScopeState,
                                               action mapAction: @escaping (Action) -> ScopeAction?,
-                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) {
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
         applyMiddlewares(middlewares: middlewares.map { $0.effect(state:action:) },
                          state: mapState,
                          action: mapAction,
@@ -146,7 +146,7 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
                                  ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
                                               state mapState: @escaping (State) -> ScopeState,
                                               action mapAction: @escaping (Action) -> ScopeAction?,
-                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) {
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
                             State,
                             Action) -> Effect<Action> = {
@@ -159,13 +159,15 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
         self.middlewares += middlewares.map {
             bind(mapMiddleware)($0)
         }
+
+        return self
     }
 
     public func applyMiddlewaresId<ScopeState: Identifiable,
                                    ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
                                                 state statePath: KeyPath<State, IdDictionary<ScopeState>>,
                                                 action mapAction: @escaping (Action) -> (ScopeState.ID, ScopeAction)?,
-                                                scopeAction mapScopeAction: @escaping (ScopeState.ID, ScopeAction) -> Action) {
+                                                scopeAction mapScopeAction: @escaping (ScopeState.ID, ScopeAction) -> Action) -> Self {
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
                             State,
                             Action) -> Effect<Action> = {
@@ -182,6 +184,8 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
         self.middlewares += middlewares.map {
             bind(mapMiddleware)($0)
         }
+
+        return self
     }
 
     private func bind<A, B, C, D>(_ f: @escaping (A, B, C) -> D) -> (A) -> (B, C) -> D {
