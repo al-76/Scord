@@ -7,11 +7,11 @@
 
 import Combine
 
-struct ReducerCollection<Element: Reducer>: Reducer {
+public struct ReducerCollection<Element: Reducer>: Reducer {
     var elements: [Element]
 
-    func reduce(state: inout Element.State,
-                action: Element.Action) {
+    public func reduce(state: inout Element.State,
+                       action: Element.Action) {
         elements
             .forEach { $0.reduce(state: &state, action: action) }
     }
