@@ -100,10 +100,10 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
 
     public func scope<ScopeState,
                       ScopeAction>(state mapState: @escaping (State) -> ScopeState,
-                                   action mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
+                                   scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
         let reduce: OnReduce<ScopeState, ScopeAction> = { [weak self] in
             guard let self else { return }
-            self.submit(mapAction($1))
+            self.submit(mapScopeAction($1))
             $0 = mapState(self.state)
         }
         let store = Store<ScopeState,
@@ -125,21 +125,9 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
     public func scope<ScopeState: Identifiable,
                       ScopeAction>(id: ScopeState.ID,
                                    state statePath: KeyPath<State, IdDictionary<ScopeState>>,
-                                   action mapAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
+                                   scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Store<ScopeState, ScopeAction, Scheduler> {
         scope(state: { $0[keyPath: statePath][id]! },
-              action: mapAction)
-    }
-
-    @available(iOS 16.0.0, *)
-    public func applyMiddlewares<ScopeState,
-                                 ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
-                                              state mapState: @escaping (State) -> ScopeState,
-                                              action mapAction: @escaping (Action) -> ScopeAction?,
-                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
-        applyMiddlewares(middlewares: middlewares.map { $0.effect(state:action:) },
-                         state: mapState,
-                         action: mapAction,
-                         scopeAction: mapScopeAction)
+              scopeAction: mapScopeAction)
     }
 
     public func applyMiddlewares<ScopeState,
@@ -161,6 +149,18 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
         }
 
         return self
+    }
+
+    @available(iOS 16.0.0, *)
+    public func applyMiddlewares<ScopeState,
+                                 ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
+                                              state mapState: @escaping (State) -> ScopeState,
+                                              action mapAction: @escaping (Action) -> ScopeAction?,
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
+        applyMiddlewares(middlewares: middlewares.map { $0.effect(state:action:) },
+                         state: mapState,
+                         action: mapAction,
+                         scopeAction: mapScopeAction)
     }
 
     public func applyMiddlewaresId<ScopeState: Identifiable,
@@ -187,6 +187,19 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
 
         return self
     }
+
+    @available(iOS 16.0.0, *)
+    public func applyMiddlewaresId<ScopeState: Identifiable,
+                                   ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
+                                                state statePath: KeyPath<State, IdDictionary<ScopeState>>,
+                                                action mapAction: @escaping (Action) -> (ScopeState.ID, ScopeAction)?,
+                                                scopeAction mapScopeAction: @escaping (ScopeState.ID, ScopeAction) -> Action) -> Self {
+        applyMiddlewaresId(middlewares: middlewares.map { $0.effect(state:action:) },
+                         state: statePath,
+                         action: mapAction,
+                         scopeAction: mapScopeAction)
+    }
+
 
     private func bind<A, B, C, D>(_ f: @escaping (A, B, C) -> D) -> (A) -> (B, C) -> D {
         { a in { b, c in f(a, b, c) } }

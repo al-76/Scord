@@ -19,7 +19,7 @@ struct MainReducer: Reducer {
 
     enum Action {
         case increment(IncrementReducer.Action)
-        case incrementId(IncrementReducer.State.ID, IncrementReducer.Action)
+        case incrementId(id: IncrementReducer.State.ID, action: IncrementReducer.Action)
 
         static func getIncrementAction(action: Action) -> IncrementReducer.Action? {
             guard case .increment(let action) = action else { return nil }
@@ -133,7 +133,7 @@ final class StoreTests: XCTestCase {
                               action: MainReducer.Action.getIncrementAction,
                               scopeAction: MainReducer.Action.increment)
         let scopedStore = store.scope(state: \.increment,
-                                      action: MainReducer.Action.increment)
+                                      scopeAction: MainReducer.Action.increment)
 
         // Act
         scopedStore.submit(.increment)
@@ -154,7 +154,7 @@ final class StoreTests: XCTestCase {
                               action: MainReducer.Action.getIncrementAction,
                               scopeAction: MainReducer.Action.increment)
         let scopedStore = store.scope(state: \.increment,
-                                      action: MainReducer.Action.increment)
+                                      scopeAction: MainReducer.Action.increment)
 
         // Act
         store.submit(.increment(.increment))
@@ -174,12 +174,12 @@ final class StoreTests: XCTestCase {
             .applyMiddlewaresId(middlewares: middlewares,
                                 state: \.rows,
                                 action: MainReducer.Action.getIncrementActionId,
-                                scopeAction: { MainReducer.Action.incrementId($0, $1) })
+                                scopeAction: MainReducer.Action.incrementId(id:action:))
         var scopedStores = [TestStoreOf<IncrementReducer>]()
         ids.forEach { id in
             scopedStores.append(store.scope(id: id,
                                             state: \.rows,
-                                            action: { MainReducer.Action.incrementId(id, $0) }))
+                                            scopeAction: { MainReducer.Action.incrementId(id: id, action: $0) }))
         }
 
         // Act
