@@ -39,7 +39,7 @@ public extension Store where Scheduler == DispatchQueue {
     @available(iOS 16.0.0, *)
     convenience init<T: Reducer>(state: T.State,
                                  reducer: T,
-                                 middlewares: [any Middleware<T.State, T.Action>] = [],
+                                 middlewares: [any MiddlewareOf<T>] = [],
                                  scheduler: Scheduler = .main)
     where T.State == State, T.Action == Action {
         self.init(state: state,
@@ -53,7 +53,7 @@ public extension Store where Scheduler == ImmediateScheduler {
     @available(iOS 16.0.0, *)
     convenience init<T: Reducer>(state: T.State,
                                  reducer: T,
-                                 middlewares: [any Middleware<T.State, T.Action>] = [],
+                                 middlewares: [any MiddlewareOf<T>] = [],
                                  scheduler: Scheduler = .shared)
     where T.State == State, T.Action == Action {
         self.init(state: state,

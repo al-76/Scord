@@ -14,6 +14,8 @@ public protocol Middleware<State, Action> {
     func effect(state: State, action: Action) -> Effect<Action>
 }
 
+public typealias MiddlewareOf<T: Reducer> = Middleware<T.State, T.Action>
+
 public typealias Effect<Action> = AnyPublisher<Action, Never>
 
 public func noEffect<Action>() -> Effect<Action> {
