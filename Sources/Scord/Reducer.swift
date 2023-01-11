@@ -31,16 +31,3 @@ public extension Reducer where Children: Reducer, Children.State == State, Child
         children.reduce(state: &state, action: action)
     }
 }
-
-public struct EmptyReducer<State, Action>: Reducer {
-    public func reduce(state: inout State, action: Action) {
-    }
-}
-
-public struct Reduce<State, Action>: Reducer {
-    public let onReduce: (inout State, Action) -> Void
-
-    public func reduce(state: inout State, action: Action) {
-        onReduce(&state, action)
-    }
-}
