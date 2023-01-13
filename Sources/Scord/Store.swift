@@ -135,11 +135,23 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
                                               state mapState: @escaping (State) -> ScopeState,
                                               action mapAction: @escaping (Action) -> ScopeAction?,
                                               scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
+        applyMiddlewares(middlewares: middlewares,
+                         state: { Optional(mapState($0)) },
+                         action: mapAction,
+                         scopeAction: mapScopeAction)
+    }
+
+    public func applyMiddlewares<ScopeState,
+                                 ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
+                                              state mapState: @escaping (State) -> ScopeState?,
+                                              action mapAction: @escaping (Action) -> ScopeAction?,
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
                             State,
                             Action) -> Effect<Action> = {
-            guard let action = mapAction($2) else { return noEffect() }
-            return $0(mapState($1), action)
+            guard let action = mapAction($2),
+                  let state = mapState($1) else { return noEffect() }
+            return $0(state, action)
                 .map { mapScopeAction($0) }
                 .eraseToAnyPublisher()
         }
@@ -163,6 +175,18 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
                          scopeAction: mapScopeAction)
     }
 
+    @available(iOS 16.0.0, *)
+    public func applyMiddlewares<ScopeState,
+                                 ScopeAction>(middlewares: [any Middleware<ScopeState, ScopeAction>],
+                                              state mapState: @escaping (State) -> ScopeState?,
+                                              action mapAction: @escaping (Action) -> ScopeAction?,
+                                              scopeAction mapScopeAction: @escaping (ScopeAction) -> Action) -> Self {
+        applyMiddlewares(middlewares: middlewares.map { $0.effect(state:action:) },
+                         state: mapState,
+                         action: mapAction,
+                         scopeAction: mapScopeAction)
+    }
+
     public func applyMiddlewaresId<ScopeState: Identifiable,
                                    ScopeAction>(middlewares: [OnMiddleware<ScopeState, ScopeAction>],
                                                 state statePath: KeyPath<State, IdDictionary<ScopeState>>,
@@ -171,7 +195,6 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
         let mapMiddleware: (OnMiddleware<ScopeState, ScopeAction>,
                             State,
                             Action) -> Effect<Action> = {
-
             guard let (id, action) = mapAction($2) else {
                 return noEffect()
             }

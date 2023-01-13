@@ -49,7 +49,38 @@ struct MainReducer: Reducer {
         }
 
         Reduce { state, action in
+        }
+    }
+}
 
+struct OptionalMainReducer: Reducer {
+    struct State: Equatable {
+        var increment: IncrementReducer.State?
+    }
+
+    enum Action {
+        case initIncrement(UUID)
+        case increment(IncrementReducer.Action)
+
+        static func getIncrementAction(action: Action) -> IncrementReducer.Action? {
+            guard case .increment(let action) = action else { return nil }
+            return action
+        }
+    }
+
+    var children: some Reducer<State, Action> {
+        ScopeOptional(state: \.increment,
+                      action: OptionalMainReducer.Action.getIncrementAction,
+                      reducer: IncrementReducer())
+
+        Reduce { state, action in
+            switch action {
+            case .initIncrement(let id):
+                state.increment = .init(id: id)
+
+            default:
+                break
+            }
         }
     }
 }
@@ -109,8 +140,7 @@ final class StoreTests: XCTestCase {
     func testSubmit() {
         // Arrange
         let id = UUID()
-        let value = 1099
-        let store = TestStoreOf<IncrementReducer>(state: .init(id: id, value: value),
+        let store = TestStoreOf<IncrementReducer>(state: .init(id: id),
                                                 reducer: IncrementReducer().reduce(state:action:),
                                                 middlewares: middlewares,
                                                 scheduler: ImmediateScheduler.shared)
@@ -119,14 +149,13 @@ final class StoreTests: XCTestCase {
         store.submit(.increment)
 
         // Assert
-        XCTAssertEqual(store.state, .init(id: id, value: value + 1))
+        XCTAssertEqual(store.state, .init(id: id, value: 1))
     }
 
     func testSubmitWithScope() {
         // Arrange
         let id = UUID()
-        let value = 1099
-        let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: id, value: value)),
+        let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: id)),
                                              reducer: MainReducer())
             .applyMiddlewares(middlewares: middlewares,
                               state: \.increment,
@@ -139,15 +168,14 @@ final class StoreTests: XCTestCase {
         scopedStore.submit(.increment)
 
         // Assert
-        XCTAssertEqual(scopedStore.state, .init(id: id, value: value + 1))
+        XCTAssertEqual(scopedStore.state, .init(id: id, value: 1))
         XCTAssertEqual(scopedStore.state, store.state.increment)
     }
 
     func testSubmitWithScopeMediated() {
         // Arrange
         let id = UUID()
-        let value = 1099
-        let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: id, value: value)),
+        let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: id)),
                                              reducer: MainReducer())
             .applyMiddlewares(middlewares: middlewares,
                               state: \.increment,
@@ -160,16 +188,15 @@ final class StoreTests: XCTestCase {
         store.submit(.increment(.increment))
 
         // Assert
-        XCTAssertEqual(scopedStore.state, .init(id: id, value: value + 1))
+        XCTAssertEqual(scopedStore.state, .init(id: id, value: 1))
         XCTAssertEqual(scopedStore.state, store.state.increment)
     }
 
     func testSubmitWithRows() {
         // Arrange
         let ids = [UUID(), UUID(), UUID()]
-        let value = 1099
         let store = TestStoreOf<MainReducer>(state: .init(increment: .init(id: UUID()),
-                                                          rows: ids.reduce(into: [:]) { $0[$1] = .init(id: $1, value: value) }),
+                                                          rows: ids.reduce(into: [:]) { $0[$1] = .init(id: $1) }),
                                              reducer: MainReducer())
             .applyMiddlewaresId(middlewares: middlewares,
                                 state: \.rows,
@@ -187,8 +214,29 @@ final class StoreTests: XCTestCase {
 
         // Assert
         ids.indices.forEach {
-            XCTAssertEqual(scopedStores[$0].state, .init(id: ids[$0], value: value + 1))
+            XCTAssertEqual(scopedStores[$0].state, .init(id: ids[$0], value: 1))
             XCTAssertEqual(scopedStores[$0].state, store.state.rows[ids[$0]])
         }
+    }
+
+    func testSubmitWithOptionalScope() {
+        // Arrange
+        let id = UUID()
+        let store = TestStoreOf<OptionalMainReducer>(state: .init(),
+                                                     reducer: OptionalMainReducer())
+            .applyMiddlewares(middlewares: middlewares,
+                              state: \.increment,
+                              action: OptionalMainReducer.Action.getIncrementAction,
+                              scopeAction: OptionalMainReducer.Action.increment)
+        let scopedStore = store.scope(state: \.increment,
+                                      scopeAction: OptionalMainReducer.Action.increment)
+        store.submit(.initIncrement(id))
+
+        // Act
+        scopedStore.submit(.increment)
+
+        // Assert
+        XCTAssertEqual(scopedStore.state, .init(id: id, value: 1))
+        XCTAssertEqual(scopedStore.state, store.state.increment)
     }
 }
