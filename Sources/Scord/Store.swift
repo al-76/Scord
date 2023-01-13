@@ -63,12 +63,6 @@ public extension Store where Scheduler == ImmediateScheduler {
     }
 }
 
-public extension Store {
-    func unwrap<T>() -> Store<T, Action, Scheduler> where State == T? {
-        scope(state: { $0! }, scopeAction: { $0 })
-    }
-}
-
 final public class Store<State, Action, Scheduler: Combine.Scheduler>: ObservableObject {
     public typealias OnReduce<State, Action> = (inout State, Action) -> Void
     public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
