@@ -233,7 +233,8 @@ final class StoreTests: XCTestCase {
         store.submit(.initIncrement(id))
 
         // Act
-        Store.unwrap(scopedStore)
+        scopedStore
+            .unwrap()
             .submit(.increment)
 
         // Assert

@@ -64,8 +64,8 @@ public extension Store where Scheduler == ImmediateScheduler {
 }
 
 public extension Store {
-    static func unwrap(_ store: Store<State?, Action, Scheduler>) -> Store<State, Action, Scheduler> {
-        store.scope(state: { $0! }, scopeAction: { $0 })
+    func unwrap<T>() -> Store<T, Action, Scheduler> where State == T? {
+        scope(state: { $0! }, scopeAction: { $0 })
     }
 }
 
