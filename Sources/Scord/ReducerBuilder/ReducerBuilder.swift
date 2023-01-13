@@ -8,7 +8,7 @@
 import Combine
 
 @resultBuilder
-public enum ReducerBuilder<State: Equatable, Action> {
+public enum ReducerBuilder<State, Action> {
     public static func buildBlock() -> some Reducer<State, Action> {
         EmptyReducer()
     }
