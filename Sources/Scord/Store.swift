@@ -63,6 +63,12 @@ public extension Store where Scheduler == ImmediateScheduler {
     }
 }
 
+public extension Store {
+    static func unwrap(_ store: Store<State?, Action, Scheduler>) -> Store<State, Action, Scheduler> {
+        store.scope(state: { $0! }, scopeAction: { $0 })
+    }
+}
+
 final public class Store<State, Action, Scheduler: Combine.Scheduler>: ObservableObject {
     public typealias OnReduce<State, Action> = (inout State, Action) -> Void
     public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>

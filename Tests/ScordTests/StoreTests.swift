@@ -233,7 +233,8 @@ final class StoreTests: XCTestCase {
         store.submit(.initIncrement(id))
 
         // Act
-        scopedStore.submit(.increment)
+        Store.unwrap(scopedStore)
+            .submit(.increment)
 
         // Assert
         XCTAssertEqual(scopedStore.state, .init(id: id, value: 1))
