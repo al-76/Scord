@@ -69,7 +69,7 @@ public extension Store {
     }
 }
 
-final public class Store<State, Action, Scheduler: Combine.Scheduler>: ObservableObject {
+final public class Store<State: Equatable, Action, Scheduler: Combine.Scheduler>: ObservableObject {
     public typealias OnReduce<State, Action> = (inout State, Action) -> Void
     public typealias OnMiddleware<State, Action> = (State, Action) -> Effect<Action>
 
@@ -121,6 +121,7 @@ final public class Store<State, Action, Scheduler: Combine.Scheduler>: Observabl
 
         $state
             .dropFirst()
+            .removeDuplicates()
             .map(mapState)
             .receive(on: scheduler)
             .assign(to: &store.$state)

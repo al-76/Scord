@@ -8,7 +8,7 @@
 import Combine
 
 public protocol Reducer<State, Action> {
-    associatedtype State
+    associatedtype State: Equatable
     associatedtype Action
     associatedtype Children
 

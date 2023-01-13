@@ -5,7 +5,7 @@
 //  Created by Vyacheslav Konopkin on 11.01.2023.
 //
 
-public struct Reduce<State, Action>: Reducer {
+public struct Reduce<State: Equatable, Action>: Reducer {
     private let onReduce: (inout State, Action) -> Void
 
     public init(onReduce: @escaping (inout State, Action) -> Void) {
