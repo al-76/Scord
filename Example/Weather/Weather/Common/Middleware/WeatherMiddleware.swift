@@ -29,7 +29,7 @@ struct WeatherMiddleware: Middleware {
             .load()
             .map { locations in
                 locations
-                    .reduce(into: ListWeatherReducer.WeatherItems()) {
+                    .reduce(into: WeatherReducer.WeatherItems()) {
                         let id = uuidProvider.uuid()
                         return $0[id] = .init(id: id, location: $1)
                     }
