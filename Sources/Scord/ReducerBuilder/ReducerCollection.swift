@@ -8,7 +8,11 @@
 import Combine
 
 public struct ReducerCollection<Element: Reducer>: Reducer {
-    public var elements: [Element]
+    private let elements: [Element]
+
+    public init(elements: [Element]) {
+        self.elements = elements
+    }
 
     public func reduce(state: inout Element.State,
                        action: Element.Action) {
